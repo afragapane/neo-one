@@ -4,4 +4,5 @@ export * from './ConsoleLogHelper';
 export * from './DebugLogHelper';
 export * from './ExpHelper';
 export * from './GenericLogSerializeHelper';
+export * from './PickItemCloneHelper';
 export * from './serialize';

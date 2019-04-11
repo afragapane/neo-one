@@ -41,6 +41,7 @@ import {
   DebugLogHelperOptions,
   ExpHelper,
   GenericLogSerializeHelper,
+  PickItemCloneHelper,
 } from './common';
 import {
   BreakHelper,
@@ -491,6 +492,7 @@ export interface Helpers {
   // common
   readonly arrSlice: (options?: ArrSliceHelperOptions) => ArrSliceHelper;
   readonly cloneArray: CloneArrayHelper;
+  readonly pickItemClone: PickItemCloneHelper;
   readonly forType: (options: ForTypeHelperOptions) => ForTypeHelper;
   readonly genericLogSerialize: GenericLogSerializeHelper;
   readonly exp: ExpHelper;
@@ -917,6 +919,7 @@ export const createHelpers = (): Helpers => {
     // common
     arrSlice: (options = {}) => new ArrSliceHelper(options),
     cloneArray: new CloneArrayHelper(),
+    pickItemClone: new PickItemCloneHelper(),
     forType: (options) => new ForTypeHelper(options),
     genericLogSerialize: new GenericLogSerializeHelper(),
     exp: new ExpHelper(),
