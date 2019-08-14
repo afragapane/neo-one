@@ -2,7 +2,7 @@ FROM neotracker/neo-one-circleci-node:10.16.0-1 as builder
 RUN mkdir -p /tmp/neo-one
 WORKDIR /tmp/neo-one
 
-COPY package.json tsconfig.json lerna.json gulpfile.js LICENSE README.md ./
+COPY package.json tsconfig.json lerna.json gulpfile.js yarn.lock LICENSE README.md ./
 COPY tsconfig/ tsconfig
 COPY types/ types
 COPY packages/neo-one-utils/src/ packages/neo-one-utils/src
@@ -58,7 +58,7 @@ COPY packages/neo-one-node-vm/package.json packages/neo-one-node-vm/
 COPY packages/neo-one-node/src/ packages/neo-one-node/src
 COPY packages/neo-one-node/package.json packages/neo-one-node/
 
-RUN sudo yarn install --non-interactive
+RUN sudo yarn install --non-interactive --network-timeout 1000000
 RUN yarn build:node
 
 FROM node:10-stretch-slim AS production
