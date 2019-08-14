@@ -57,6 +57,8 @@ COPY packages/neo-one-node-vm/src/ packages/neo-one-node-vm/src
 COPY packages/neo-one-node-vm/package.json packages/neo-one-node-vm/
 COPY packages/neo-one-node/src/ packages/neo-one-node/src
 COPY packages/neo-one-node/package.json packages/neo-one-node/
+COPY packages/neo-one-http/src/ packages/neo-one-http/src
+COPY packages/neo-one-http/package.json packages/neo-one-http/
 
 RUN sudo yarn install --non-interactive --network-timeout 1000000
 RUN yarn build:node
