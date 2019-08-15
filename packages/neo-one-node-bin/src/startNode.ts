@@ -4,6 +4,7 @@ import { FullNode } from '@neo-one/node';
 import { finalize } from '@neo-one/utils';
 import { getConfiguration } from './utils';
 
+// nonce
 export const startNode = async (): Promise<void> => {
   const { environment, settings, options$ } = getConfiguration();
   let mutableShutdownFuncs: ReadonlyArray<() => Promise<void>> = [];
