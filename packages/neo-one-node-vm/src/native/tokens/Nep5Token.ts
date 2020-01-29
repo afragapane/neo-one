@@ -141,19 +141,19 @@ export const NEP5_METHODS = (
 
         const stateFrom = new Nep5AccountState(storageFrom);
 
-        if (stateFrom.mutableBalance.lt(amount)) {
+        if (stateFrom.balance.lt(amount)) {
           return new BooleanStackItem(false);
         }
         if (common.uInt160ToHex(from) === common.uInt160ToHex(to)) {
           onBalanceChange(context, from, stateFrom, new BN(0));
         } else {
           onBalanceChange(context, from, stateFrom, amount.neg());
-          if (stateFrom.mutableBalance.eq(amount)) {
+          if (stateFrom.balance.eq(amount)) {
             await context.blockchain.storageItem.delete(keyFrom);
           } else {
             stateFrom.updateBalance(amount.neg());
             await context.blockchain.storageItem.update(storageFrom, {
-              value: stateFrom.mutableBalance.toBuffer(),
+              value: stateFrom.balance.toBuffer(),
               flags: StorageFlags.None,
             });
           }
@@ -174,7 +174,7 @@ export const NEP5_METHODS = (
             );
           } else {
             await context.blockchain.storageItem.update(storageTo, {
-              value: stateTo.mutableBalance.toBuffer(),
+              value: stateTo.balance.toBuffer(),
               flags: StorageFlags.None,
             });
           }
@@ -239,13 +239,13 @@ export class Nep5Token extends NativeContractBase {
         new StorageItem({
           hash: totalSupplyKey.hash,
           key: totalSupplyKey.key,
-          value: accountState.mutableBalance.toBuffer(),
+          value: accountState.balance.toBuffer(),
           flags: StorageFlags.None,
         }),
       );
     } else {
       await context.blockchain.storageItem.update(totalSupplyStorageItem, {
-        value: new BN(totalSupplyStorageItem.value).add(accountState.mutableBalance).toBuffer(),
+        value: new BN(totalSupplyStorageItem.value).add(accountState.balance).toBuffer(),
         flags: StorageFlags.None,
       });
     }
@@ -265,15 +265,15 @@ export class Nep5Token extends NativeContractBase {
     const accountKey = createAccountKey(this.hash, account);
     const accountStorageItem = await context.blockchain.storageItem.get(accountKey);
     const accountState = new Nep5AccountState(accountStorageItem);
-    if (accountState.mutableBalance.lt(amount)) {
-      throw new InvalidAmountError(context, 'amount', accountState.mutableBalance.toString());
+    if (accountState.balance.lt(amount)) {
+      throw new InvalidAmountError(context, 'amount', accountState.balance.toString());
     }
     this.onBalanceChange(context, account, accountState, amount.neg());
-    if (accountState.mutableBalance.eq(amount)) {
+    if (accountState.balance.eq(amount)) {
       await context.blockchain.storageItem.delete(accountKey);
     } else {
       await context.blockchain.storageItem.update(accountStorageItem, {
-        value: accountState.mutableBalance.sub(amount).toBuffer(),
+        value: accountState.balance.sub(amount).toBuffer(),
         flags: StorageFlags.None,
       });
     }

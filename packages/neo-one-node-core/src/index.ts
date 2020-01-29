@@ -22,6 +22,7 @@ export * from './StorageFlags';
 export * from './StorageItem';
 export * from './Validator';
 export * from './ValidatorsCount';
+export * from './ValidatorState';
 export * from './Witness';
 export * from './action';
 export * from './contract';

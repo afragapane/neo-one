@@ -361,9 +361,11 @@ export interface RelayTransactionResultJSON {
   readonly verifyResult?: VerifyTransactionResultJSON;
 }
 
-export interface ValidatorJSON {
-  readonly version: number;
+export interface ValidatorStateJSON {
+  readonly votes: string;
+}
+
+export interface ValidatorJSON extends ValidatorStateJSON {
   readonly publicKey: string;
   readonly registered: boolean;
-  readonly votes: string;
 }

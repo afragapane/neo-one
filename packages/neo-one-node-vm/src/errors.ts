@@ -254,6 +254,9 @@ export const InvalidPolicyError = makeErrorWithCode(
   (context: ExecutionContext, name: string) =>
     getMessage(context, `Expected to call PolicyContract, instead called ${name}`),
 );
+export const InvalidValidatorStorage = makeErrorWithCode('NATIVE_CONTRACT_ERROR', (context: ExecutionContext) =>
+  getMessage(context, `Expected validator storage to be defined.`),
+);
 export const InvalidInvocationCounterError = makeErrorWithCode('VM_ERROR', (context: ExecutionContext, hash: string) =>
   getMessage(context, `Could not find InvocationCounter for scriptHash: ${hash}`),
 );

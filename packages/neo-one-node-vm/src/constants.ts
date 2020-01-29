@@ -46,7 +46,10 @@ export const FEES = {
   1_000_000: new BN(1000000),
   2_500_000: new BN(2500000),
   3_000_000: new BN(3000000),
+  5_000_000: new BN(5000000),
   8_000_000: new BN(8000000),
+  10_000_000: new BN(100000000),
+  50_000_000: new BN(500000000),
 };
 
 export const FREE_GAS = common.TEN_FIXED8;

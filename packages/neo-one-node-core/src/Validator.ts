@@ -1,5 +1,4 @@
 import { BinaryWriter, common, ECPoint, IOHelper, JSONHelper, ValidatorJSON } from '@neo-one/client-common';
-import { BaseState } from '@neo-one/client-full-common';
 import { BN } from 'bn.js';
 import { Equals, EquatableKey } from './Equatable';
 import {
@@ -12,32 +11,28 @@ import {
   SerializeWire,
 } from './Serializable';
 import { BinaryReader, utils } from './utils';
+import { ValidatorStateAdd, ValidatorStateUpdate } from './ValidatorState';
 
 export interface ValidatorKey {
   readonly publicKey: ECPoint;
 }
 
-export interface ValidatorAdd {
-  readonly version?: number;
+export interface ValidatorAdd extends ValidatorStateAdd {
   readonly publicKey: ECPoint;
   readonly registered?: boolean;
-  readonly votes?: BN;
 }
 
-export interface ValidatorUpdate {
+export interface ValidatorUpdate extends ValidatorStateUpdate {
   readonly registered?: boolean;
-  readonly votes?: BN;
 }
 
-export class Validator extends BaseState
-  implements SerializableWire<Validator>, EquatableKey, SerializableJSON<ValidatorJSON> {
+export class Validator implements SerializableWire<Validator>, EquatableKey, SerializableJSON<ValidatorJSON> {
   public static deserializeWireBase({ reader }: DeserializeWireBaseOptions): Validator {
-    const version = reader.readUInt8();
     const publicKey = reader.readECPoint();
     const registered = reader.readBoolean();
     const votes = reader.readFixed8();
 
-    return new this({ version, publicKey, registered, votes });
+    return new this({ publicKey, registered, votes });
   }
 
   public static deserializeWire(options: DeserializeWireOptions): Validator {
@@ -57,8 +52,7 @@ export class Validator extends BaseState
   public readonly serializeWire: SerializeWire = createSerializeWire(this.serializeWireBase.bind(this));
   private readonly sizeInternal: () => number;
 
-  public constructor({ version, publicKey, registered = false, votes = utils.ZERO }: ValidatorAdd) {
-    super({ version });
+  public constructor({ publicKey, registered = false, votes = utils.ZERO }: ValidatorAdd) {
     this.publicKey = publicKey;
     this.registered = registered;
     this.votes = votes;
@@ -73,7 +67,6 @@ export class Validator extends BaseState
 
   public update({ votes = this.votes, registered = this.registered }: ValidatorUpdate): Validator {
     return new Validator({
-      version: this.version,
       publicKey: this.publicKey,
       registered,
       votes,
@@ -81,7 +74,6 @@ export class Validator extends BaseState
   }
 
   public serializeWireBase(writer: BinaryWriter): void {
-    writer.writeUInt8(this.version);
     writer.writeECPoint(this.publicKey);
     writer.writeBoolean(this.registered);
     writer.writeFixed8(this.votes);
@@ -89,7 +81,6 @@ export class Validator extends BaseState
 
   public serializeJSON(_context: SerializeJSONContext): ValidatorJSON {
     return {
-      version: this.version,
       publicKey: JSONHelper.writeECPoint(this.publicKey),
       registered: this.registered,
       votes: JSONHelper.writeFixed8(this.votes),
